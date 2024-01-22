@@ -16,4 +16,13 @@ class SalleResource extends JsonResource
     {
         return parent::toArray($request);
     }
+
+    /*
+    public function toArray($request) {
+        return [
+            'id' => $this->id,
+            'nom_complet' => sprintf("%s %s",$this->prenom, $this->nom),
+            'age' => $this-> age
+        ];
+    }*/
 }

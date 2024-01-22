@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SalleResource;
+use App\Models\Salle;
 use Illuminate\Http\Request;
 
 class SalleController extends Controller
@@ -12,7 +14,8 @@ class SalleController extends Controller
      */
     public function index()
     {
-        //
+        $salles = Salle::all();
+        return SalleResource::collection($salles);
     }
 
     /**
@@ -26,9 +29,9 @@ class SalleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
+    public function show($id) {
+        $personne = Personne::findOrFail($id);
+        return new PersonneResource($personne);
     }
 
     /**
