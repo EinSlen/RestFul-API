@@ -28,7 +28,7 @@ class SalleController extends Controller
         $salle = Salle::create($request->input());
         return response()->json([
             'message'=>"Salle créer avec succès",
-            'data'=> $salle,
+            'data'=> new SalleResource($salle),
             ],status:200);
 
 
@@ -45,16 +45,26 @@ class SalleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    public function update(SalleRequest $request, int $id) {
+         $salle = Salle::findOrFail($id);
+ $salle->update($request->all());
+ return response()->json([
+             'status' => true,
+             'message' => "salle updated successfully!",
+             'salle' => new SalleResource($salle)
+             ], 200);}
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $salle = Salle::findOrFail($id);
+        $salle->delete();
+        return response()->json([
+            'status' => true,
+            'message' => "salle delete successfully!"
+        ], 200);
     }
+
 }
