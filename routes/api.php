@@ -25,3 +25,5 @@ Route::post('salles', [\App\Http\Controllers\Api\SalleController::class, 'store'
 
 Route::put('salles/{id}', [\App\Http\Controllers\Api\SalleController::class, 'update'])->name("salles.update");
 Route::delete('salles/{id}', [\App\Http\Controllers\Api\SalleController::class, 'destroy'])->name("salles.delete");
+
+//Route::apiResource('salles', SalleController::class);
