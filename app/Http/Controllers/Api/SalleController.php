@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SalleRequest;
 use App\Http\Resources\SalleResource;
 use App\Models\Salle;
 use Illuminate\Http\Request;
@@ -21,17 +22,24 @@ class SalleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SalleRequest $request)
     {
-        //
+        // si içi la requête est valide
+        $salle = Salle::create($request->input());
+        return response()->json([
+            'message'=>"Salle créer avec succès",
+            'data'=> $salle,
+            ],status:200);
+
+
     }
 
     /**
      * Display the specified resource.
      */
     public function show($id) {
-        $personne = Personne::findOrFail($id);
-        return new PersonneResource($personne);
+        $salle = Salle::findOrFail($id);
+        return new SalleResource($salle);
     }
 
     /**
