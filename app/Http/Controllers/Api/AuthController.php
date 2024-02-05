@@ -29,6 +29,7 @@ class AuthController extends Controller {
         }
 
         $user = Auth::user();
+        $token = auth()->tokenById($user->id);
         return response()->json(['status' => 'success',
             'user' => $user,
             'authorisation' => ['token' => $token,
