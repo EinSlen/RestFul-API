@@ -8,6 +8,125 @@ servers:
     url: 'http://localhost:8000/api'
     description: 'Docs serveur'
 paths:
+  /login:
+    post:
+      tags:
+        - Authentification
+      summary: 'Authentifier un utilisateur et renvoyer un jeton JWT.'
+      description: 'Authentifier un utilisateur et renvoyer un jeton JWT.'
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: 'Connexion réussie'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  user: { $ref: /App/Models/User }
+                  authorization: { properties: { token: { type: string }, type: { type: string } }, type: object }
+                type: object
+        '401':
+          description: 'Non autorisé'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  message: { type: string }
+                type: object
+  /register:
+    post:
+      tags:
+        - Authentification
+      summary: 'Enregistrer un nouvel utilisateur et renvoyer un jeton JWT.'
+      description: 'Enregistrer un nouvel utilisateur et renvoyer un jeton JWT.'
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: 'Utilisateur créé avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  message: { type: string }
+                  user: { $ref: /App/Models/User }
+                  authorization: { properties: { token: { type: string }, type: { type: string } }, type: object }
+                type: object
+        '422':
+          description: 'Erreur de validation'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  message: { type: string }
+                  errors: { type: object }
+                type: object
+  /logout:
+    post:
+      tags:
+        - Authentification
+      summary: "Déconnecter l'utilisateur authentifié."
+      description: "Déconnecter l'utilisateur authentifié."
+      operationId: logout
+      responses:
+        '200':
+          description: 'Déconnexion réussie'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  message: { type: string }
+                type: object
+      security:
+        -
+          bearerAuth: []
+  /refresh:
+    post:
+      tags:
+        - Authentification
+      summary: "Rafraîchir le jeton JWT pour l'utilisateur authentifié."
+      description: "Rafraîchir le jeton JWT pour l'utilisateur authentifié."
+      operationId: refresh
+      responses:
+        '200':
+          description: 'Jeton rafraîchi avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  user: { $ref: /App/Models/User }
+                  authorization: { properties: { token: { type: string }, type: { type: string } }, type: object }
+                type: object
+      security:
+        -
+          bearerAuth: []
   /salles:
     get:
       tags:
@@ -28,6 +147,43 @@ paths:
         -
           bearerAuth:
             role: visiteur
+    post:
+      tags:
+        - Salles
+      summary: 'Créer une salle'
+      description: "Création d'une salle"
+      operationId: store
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  $ref: '#/components/schemas/Salle'
+              type: object
+      responses:
+        '200':
+          description: 'Salle créée avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                  data: { $ref: '#/components/schemas/Salle' }
+                type: object
+        '422':
+          description: 'Erreur de validation'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                  errors: { type: object }
+                type: object
+      security:
+        -
+          bearerAuth:
+            role: admin
   '/salles/{id}':
     get:
       tags:
@@ -66,6 +222,98 @@ paths:
         -
           bearerAuth:
             role: view-salle
+    put:
+      tags:
+        - Salles
+      summary: 'Mettre à jour une salle'
+      description: "Mise à jour d'une salle"
+      operationId: update
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Identifiant de la salle'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  $ref: '#/components/schemas/Salle'
+              type: object
+      responses:
+        '200':
+          description: 'Salle modifiée avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                  data: { $ref: '#/components/schemas/Salle' }
+                type: object
+        '404':
+          description: 'Salle non trouvée'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                  errors: { properties: { id: { type: array, items: { type: string } } }, type: object }
+                type: object
+        '422':
+          description: 'Erreur de validation'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                  errors: { type: object }
+                type: object
+      security:
+        -
+          bearerAuth:
+            role: admin
+    delete:
+      tags:
+        - Salles
+      summary: 'Supprimer une salle'
+      description: "Suppression d'une salle"
+      operationId: destroy
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Identifiant de la salle'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Salle supprimée avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '404':
+          description: 'Salle non trouvée'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                  errors: { properties: { id: { type: array, items: { type: string } } }, type: object }
+                type: object
+      security:
+        -
+          bearerAuth:
+            role: admin
 components:
   schemas:
     Client:

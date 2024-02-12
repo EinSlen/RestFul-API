@@ -36,15 +36,46 @@ class SalleController extends Controller {
             )
         ]
     )]
-
     public function index() {
         $salles = Salle::all();
         return SalleResource::collection($salles);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Créer une salle
      */
+    #[OA\Post(
+        path: "/salles",
+        operationId: "store",
+        description: "Création d'une salle",
+        security: [["bearerAuth" => ["role" => "admin"]],],
+        tags: ["Salles"],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(
+                        property: "data",
+                        ref: "#/components/schemas/Salle",
+                        type: "object"
+                    )
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200,
+                description: "Salle créée avec succès",
+                content: new OA\JsonContent(properties: [
+                    new OA\Property(property: "message", type: "string"),
+                    new OA\Property(property: "data", ref: "#/components/schemas/Salle", type: "object"),
+                ], type: "object")
+            ),
+            new OA\Response(response: 422, description: "Erreur de validation",
+                content: new OA\JsonContent(properties: [
+                    new OA\Property(property: "message", type: "string"),
+                    new OA\Property(property: "errors", type: "object"),
+                ], type: "object"))
+        ]
+    )]
     public function store(SalleRequest $request) {
         // Si j'arrive ici, la requête est correcte (les données sont valides)
         $salle = Salle::create($request->input());
@@ -88,7 +119,6 @@ class SalleController extends Controller {
                 ], type: "object"))
         ]
     )]
-
     public function show(string $id) {
         $salle = Salle::findOrFail($id);
 
@@ -99,8 +129,57 @@ class SalleController extends Controller {
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mettre à jour une salle
      */
+    #[OA\Put(
+        path: "/salles/{id}",
+        operationId: "update",
+        description: "Mise à jour d'une salle",
+        security: [["bearerAuth" => ["role" => "admin"]],],
+        tags: ["Salles"],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                description: "Identifiant de la salle",
+                in: "path",
+                required: "true",
+                schema: new OA\Schema(type: "integer", format: 'int64')
+            )
+        ],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(
+                        property: "data",
+                        ref: "#/components/schemas/Salle",
+                        type: "object"
+                    )
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200,
+                description: "Salle modifiée avec succès",
+                content: new OA\JsonContent(properties: [
+                    new OA\Property(property: "message", type: "string"),
+                    new OA\Property(property: "data", ref: "#/components/schemas/Salle", type: "object"),
+                ], type: "object")
+            ),
+            new OA\Response(response: 404, description: "Salle non trouvée",
+                content: new OA\JsonContent(properties: [
+                    new OA\Property(property: "message", type: "string"),
+                    new OA\Property(property: "errors", properties: [
+                        new OA\Property(property: "id", type: "array", items: new OA\Items(type: "string"))
+                    ], type: "object"
+                    ),
+                ], type: "object")),
+            new OA\Response(response: 422, description: "Erreur de validation",
+                content: new OA\JsonContent(properties: [
+                    new OA\Property(property: "message", type: "string"),
+                    new OA\Property(property: "errors", type: "object"),
+                ], type: "object"))
+        ]
+    )]
     public function update(SalleRequest $request, string $id) {
         // Si j'arrive ici, la requête est correcte (les données sont valides)
         $salle = Salle::findOrFail($id);
@@ -113,13 +192,45 @@ class SalleController extends Controller {
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Supprimer une salle
      */
+    #[OA\Delete(
+        path: "/salles/{id}",
+        operationId: "destroy",
+        description: "Suppression d'une salle",
+        security: [["bearerAuth" => ["role" => "admin"]],],
+        tags: ["Salles"],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                description: "Identifiant de la salle",
+                in: "path",
+                required: "true",
+                schema: new OA\Schema(type: "integer", format: 'int64')
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200,
+                description: "Salle supprimée avec succès",
+                content: new OA\JsonContent(properties: [
+                    new OA\Property(property: "message", type: "string"),
+                ], type: "object")
+            ),
+            new OA\Response(response: 404, description: "Salle non trouvée",
+                content: new OA\JsonContent(properties: [
+                    new OA\Property(property: "message", type: "string"),
+                    new OA\Property(property: "errors", properties: [
+                        new OA\Property(property: "id", type: "array", items: new OA\Items(type: "string"))
+                    ], type: "object"
+                    ),
+                ], type: "object"))
+        ]
+    )]
     public function destroy(string $id) {
         $salle = Salle::findOrFail($id);
         $salle->delete();
         return response()->json([
-            'message' => "suppression salle",
+            'message' => "Salle supprimée avec succès",
         ], 200);
     }
 }
