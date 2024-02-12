@@ -55,7 +55,7 @@ class SalleController extends Controller {
     }
 
     /**
-     * Display the specified resource.
+     * Affiche le détail d'une salle
      */
     #[OA\Get(
         path: "/salles/{id}",
