@@ -1,7 +1,8 @@
 # Travaux Pratiques Complément Web : Réalisation d'un serveur RestFul API
 
-composer update
-cp .env.example .env (modif pour la bdd)
+## Commandes Initialisation du projet
+
+git add README.md
+php artisan key:generate
 php artisan migrate
 php artisan db:seed
-

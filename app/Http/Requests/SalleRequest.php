@@ -4,13 +4,11 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SalleRequest extends FormRequest
-{
+class SalleRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
-    {
+    public function authorize(): bool {
         return true;
     }
 
@@ -19,21 +17,20 @@ class SalleRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            'nom' => "required",
-            'adresse' => "required",
-            'code_postal' => "required",
-            'ville' => "required",
-
+            'nom' => 'required',
+            'adresse' => 'required',
+            'code_postal' => 'required',
+            'ville' => 'required',
         ];
     }
 
-    public function messages()
-    {
+    public function messages() {
         return [
-            'required'=> "l'attribut :attribute est obligatoire"
+            'required' => "l'attribut :attribute est obligatoire"
         ];
     }
+
+
 }

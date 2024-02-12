@@ -29,7 +29,7 @@ Route::controller(AuthController::class)->group(function () {
 Route::get('salles', [SalleController::class, 'index'])->name('salles.index')
     ->middleware(['auth:api', 'role:'.Role::VISITEUR]);;
 Route::post('salles', [SalleController::class, 'store'])->name('salles.store')
-    ->middleware(['auth:api', 'role:'.Role::CREATE_SALLE]);
+->middleware(['auth:api', 'role:'.Role::CREATE_SALLE]);
 Route::get('salles/{id}', [SalleController::class, 'show'])
     ->where('id', '^[0-9]+$')
     ->name('salles.show')
