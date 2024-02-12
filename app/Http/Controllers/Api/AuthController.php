@@ -3,21 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
-class AuthController extends Controller
-{
-
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+class AuthController extends Controller {
+    public function __construct() {
+        $this->middleware('auth:api', ['except' => ['login', 'register' ]]);
     }
 
-    public function login(Request $request)
-    {
+    public function login(Request $request) {
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
@@ -33,19 +29,14 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        return response()->json([
-            'status' => 'success',
+        $token = auth()->tokenById($user->id);
+        return response()->json(['status' => 'success',
             'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
-        ]);
-
+            'authorisation' => ['token' => $token,
+                'type' => 'bearer',]]);
     }
 
-    public function register(Request $request)
-    {
+    public function register(Request $request) {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -70,8 +61,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout()
-    {
+    public function logout() {
         Auth::logout();
         return response()->json([
             'status' => 'success',
@@ -79,8 +69,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function refresh()
-    {
+    public
+    function refresh() {
         return response()->json([
             'status' => 'success',
             'user' => Auth::user(),
