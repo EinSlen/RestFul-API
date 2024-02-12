@@ -32,7 +32,7 @@ paths:
     get:
       tags:
         - Salles
-      summary: 'Display the specified resource.'
+      summary: "Affiche le détail d'une salle"
       description: "Détails d'une salle"
       operationId: show
       parameters:
@@ -68,6 +68,29 @@ paths:
             role: view-salle
 components:
   schemas:
+    Client:
+      properties:
+        id:
+          type: integer
+      type: object
+    Reservation:
+      properties:
+        id:
+          type: integer
+      type: object
+    Role:
+      properties:
+        ADMIN:
+          type: Const
+        CREATE_SALLE:
+          type: Const
+        EDIT_SALLE:
+          type: Const
+        VIEW_SALLE:
+          type: Const
+        VISITEUR:
+          type: Const
+      type: object
     Salle:
       properties:
         id:
@@ -80,6 +103,17 @@ components:
         codePostal:
           type: string
         ville:
+          type: string
+      type: object
+    User:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        password:
           type: string
       type: object
   securitySchemes:
