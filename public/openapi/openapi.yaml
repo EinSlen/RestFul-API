@@ -7,6 +7,65 @@ servers:
   -
     url: 'http://localhost:8000/api'
     description: 'Docs serveur'
+paths:
+  /salles:
+    get:
+      tags:
+        - Salles
+      summary: 'Affiche la liste des ressources Salles'
+      description: 'La liste des salles'
+      operationId: index
+      responses:
+        '200':
+          description: 'La liste des salles'
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Salle' } }
+                type: object
+      security:
+        -
+          bearerAuth:
+            role: visiteur
+  '/salles/{id}':
+    get:
+      tags:
+        - Salles
+      summary: 'Display the specified resource.'
+      description: "Détails d'une salle"
+      operationId: show
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Identifiant de la salle'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Détails d'une salle"
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: { $ref: '#/components/schemas/Salle' }
+                type: object
+        '404':
+          description: 'Salle non trouvée'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                  errors: { properties: { id: { type: array, items: { type: string } } }, type: object }
+                type: object
+      security:
+        -
+          bearerAuth:
+            role: view-salle
 components:
   schemas:
     Salle:
