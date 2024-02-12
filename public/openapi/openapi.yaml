@@ -1,0 +1,30 @@
+openapi: 3.0.0
+info:
+  title: 'Serveur Api Activité Sport'
+  description: "Serveur Api Documentation pour l'application activité-sport"
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000/api'
+    description: 'Docs serveur'
+components:
+  schemas:
+    Salle:
+      properties:
+        id:
+          type: integer
+          format: int64
+        nom:
+          type: string
+        adresse:
+          type: string
+        codePostal:
+          type: string
+        ville:
+          type: string
+      type: object
+  securitySchemes:
+    bearerAuth:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer

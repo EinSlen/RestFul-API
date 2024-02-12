@@ -8,10 +8,13 @@ use Illuminate\Routing\Controller as BaseController;
 
 use OpenApi\Attributes as OA;
 
-#[OA\Info(version: "1.0.0", description: "sERVEUR api documentation application activité sport",
-    title: "API activité sport")]
-#[OA\Server(description:"serveur api", url: "http://localhost:8000/api/salles")]
-#[OA\SecurityScheme()]
+#[OA\Info(version: "1.0.0",
+    description: "Serveur Api Documentation pour l'application activité-sport",
+    title: "Serveur Api Activité Sport",
+)]
+#[OA\Server(description:"Docs serveur", url: "http://localhost:8000/api")]
+#[OA\SecurityScheme(securityScheme: 'bearerAuth', type: 'http', bearerFormat: 'JWT', scheme: 'bearer')]
+
 class OpenApi {}
 
 class Controller extends BaseController

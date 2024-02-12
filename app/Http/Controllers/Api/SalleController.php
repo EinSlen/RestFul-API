@@ -7,12 +7,36 @@ use App\Http\Requests\SalleRequest;
 use App\Http\Resources\SalleResource;
 use App\Models\Salle;
 use Illuminate\Http\Request;
+use OpenApi\Attributes\OpenApi as OA;
 
 class SalleController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Affiche la liste des ressources Salles
      */
+    #[OA\Get(
+        path: "/salles",
+        operationId: "index",
+        description: "La liste des salles",
+        security: [["bearerAuth" =>  ['role'=>'visiteur']],],
+        tags: ["Salles"],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "La liste des salles",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: "data",
+                            type: "array",
+                            items: new OA\Items(ref: "#/components/schemas/Salle", type: "object")
+                        )
+                    ]
+                )
+            )
+        ]
+    )]
+
     public function index()
     {
         $salles = Salle::all();
